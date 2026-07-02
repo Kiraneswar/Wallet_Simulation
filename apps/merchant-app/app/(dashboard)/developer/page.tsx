@@ -20,9 +20,9 @@ export default function DeveloperPage() {
 
   // Credentials config
   const credentials = {
-    clientId: "em_live_8a3f9d1c7b5a4d9e",
-    clientSecret: "emsk_live_4b7c2a1d9e8f0a3b6c5d1e2f3g4h5i6j",
-    webhookSecret: "whsec_8e7d6c5b4a3c2b1a0f9e8d7c",
+    clientId: "yourID",
+    clientSecret: "yoursecret",
+    webhookSecret: "yoursecret",
   };
 
   const handleCopy = (text: string, field: string) => {
