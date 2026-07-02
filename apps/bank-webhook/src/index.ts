@@ -19,13 +19,17 @@ app.post("/hdfcWebhook", async (req, res) => {
 
     try {
         await db.$transaction([
-            db.balance.updateMany({
+            db.balance.upsert({
                 where: {
                     userId: Number(paymentInformation.userId)
                 },
-                data: {
+                create: {
+                    userId: Number(paymentInformation.userId),
+                    amount: Number(paymentInformation.amount),
+                    locked: 0
+                },
+                update: {
                     amount: {
-                        // You can also get this from your DB
                         increment: Number(paymentInformation.amount)
                     }
                 }

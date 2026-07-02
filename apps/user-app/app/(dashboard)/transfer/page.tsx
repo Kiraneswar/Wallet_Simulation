@@ -4,12 +4,12 @@ import { BalanceCard } from "../../../components/BalanceCard";
 import { OnRampTransactions } from "../../../components/OnRampTransactions";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
+import { redirect } from "next/navigation";
 
-async function getBalance() {
-    const session = await getServerSession(authOptions);
+async function getBalance(userId: number) {
     const balance = await prisma.balance.findFirst({
         where: {
-            userId: Number(session?.user?.id)
+            userId: userId
         }
     });
     return {
@@ -18,11 +18,13 @@ async function getBalance() {
     }
 }
 
-async function getOnRampTransactions() {
-    const session = await getServerSession(authOptions);
+async function getOnRampTransactions(userId: number) {
     const txns = await prisma.onRampTransaction.findMany({
         where: {
-            userId: Number(session?.user?.id)
+            userId: userId
+        },
+        orderBy: {
+            startTime: 'desc'
         }
     });
     return txns.map(t => ({
@@ -33,24 +35,38 @@ async function getOnRampTransactions() {
     }))
 }
 
-export default async function() {
-    const balance = await getBalance();
-    const transactions = await getOnRampTransactions();
+export default async function TransferPage() {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+        redirect("/api/auth/signin");
+    }
 
-    return <div className="w-screen">
-        <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold">
-            Transfer
-        </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-4">
+    const userId = Number(session.user.id);
+    const balance = await getBalance(userId);
+    const transactions = await getOnRampTransactions(userId);
+
+    return (
+        <div className="space-y-8 w-full max-w-6xl mx-auto">
+            {/* Header */}
             <div>
-                <AddMoney />
+                <h2 className="font-heading font-extrabold text-3xl text-white tracking-tight leading-none">
+                    Transfer Funds
+                </h2>
+                <p className="text-white/50 text-sm mt-2">
+                    Deposit money using Net Banking or save cards into your wallet instantly.
+                </p>
             </div>
-            <div>
-                <BalanceCard amount={balance.amount} locked={balance.locked} />
-                <div className="pt-4">
+
+            {/* Grid Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div className="space-y-6">
+                    <AddMoney />
+                </div>
+                <div className="space-y-6">
+                    <BalanceCard amount={balance.amount} locked={balance.locked} />
                     <OnRampTransactions transactions={transactions} />
                 </div>
             </div>
         </div>
-    </div>
+    );
 }

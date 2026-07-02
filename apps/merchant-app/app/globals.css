@@ -1,3 +1,79 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .glass-card {
+    background: rgba(18, 33, 49, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(173, 199, 255, 0.12);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-panel {
+    background: rgba(28, 43, 60, 0.55);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(221, 252, 255, 0.15);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .primary-glow {
+    box-shadow: 0 0 20px 0 rgba(173, 199, 255, 0.35);
+  }
+
+  .primary-glow-hover:hover {
+    box-shadow: 0 0 25px 3px rgba(173, 199, 255, 0.45);
+    transition: all 0.3s ease;
+  }
+
+  .cyan-glow {
+    box-shadow: 0 0 20px 0 rgba(221, 252, 255, 0.3);
+  }
+
+  .input-recessed {
+    background: rgba(5, 20, 36, 0.6);
+    border: 1px solid rgba(173, 199, 255, 0.15);
+    color: #d4e4fa;
+    transition: all 0.25s ease;
+  }
+
+  .input-recessed:focus {
+    outline: none;
+    border-color: #adc7ff;
+    box-shadow: 0 0 12px 0 rgba(173, 199, 255, 0.25);
+    background: rgba(5, 20, 36, 0.85);
+  }
+
+  .status-pulse {
+    animation: status-pulse-anim 2s infinite ease-in-out;
+  }
+
+  @keyframes status-pulse-anim {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.65;
+      transform: scale(0.97);
+    }
+  }
+
+  /* Custom scrollbars for glass interfaces */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(5, 20, 36, 0.25);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(173, 199, 255, 0.25);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(173, 199, 255, 0.45);
+  }
+}
